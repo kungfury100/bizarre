@@ -10,7 +10,7 @@ function Home() {
   useGlobalRivePointer(riveHostRef)
 
   return (
-    <div>
+    <div className='page-stack items-center py-16'>
       <div ref={riveHostRef} className='hero-rive'>
         <Rive
           className='hero-rive-inner'
@@ -20,7 +20,7 @@ function Home() {
       </div>
 
       <div className='page-stack'>
-        <div className='page-stack page-stack--tight'>
+        <div className='page-stack--tight'>
           <h1>Hello there explorer.</h1>
           <p>My name is Karl, I do product design and web development. On my journey, I've led design process for user-centric products and design systems.</p>
           <p>(Been designing for two <a href='https://www.lift99.co/walloffame' target='_blank' rel='noopener noreferrer'>#EstonianMafia</a> startups.)</p>
