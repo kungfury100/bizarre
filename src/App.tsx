@@ -1,24 +1,20 @@
-import Rive from '@rive-app/react-webgl2'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import './App.css'
-import hologramRiv from './assets/hologram.riv?url'
+import PageLayout from './components/PageLayout'
+import Home from './pages/home'
+import Photos from './pages/Photos'
+
+
 
 function App() {
-
   return (
-    <div className='flex flex-col items-center'>
-      <Rive
-      className='hero-rive'
-        src={hologramRiv}
-        stateMachines="Play"
-      />
-      <h1>Hello there explorer.</h1>
-      <p>My name is Karl, I do product design and web development. On my journey, I've led design process for user-centric products and design systems.</p>
-      <p>(Been designing for two <a href="https://www.lift99.co/walloffame" target="_blank" rel="noopener noreferrer">#EstonianMafia</a> startups.)</p>
-      <div>
-        <button>Check out my work</button>
-        <button>Read my CV</button>
-      </div>
-    </div>
+    <PageLayout>
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/photos' element={<Photos />} />
+        <Route path='*' element={<Navigate to='/' replace />} />
+      </Routes>
+    </PageLayout>
   )
 }
 
