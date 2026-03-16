@@ -1,25 +1,21 @@
-import { useMemo, useRef, useState, type CSSProperties } from 'react'
+import { useEffect, useMemo, useState, type CSSProperties } from 'react'
+import { Camera, Figma, Github, Home, Menu, type LucideIcon } from 'lucide-react'
 import { NavLink, useLocation } from 'react-router-dom'
-import barsIcon from '../assets/bars.svg'
-import cameraIcon from '../assets/camera.svg'
-import figmaIcon from '../assets/figma.svg'
-import githubIcon from '../assets/github.svg'
-import houseIcon from '../assets/house.svg'
-import './Navbar.css'
+import '../styles/Navbar.css'
 
 type NavItem = {
 	id: string
 	type: 'internal' | 'external'
 	to: string
 	label: string
-	icon: string
+	icon: LucideIcon
 }
 
 const navItems: NavItem[] = [
-	{ id: 'home', type: 'internal', to: '/', label: 'Home', icon: houseIcon },
-  { id: 'photos', type: 'internal', to: '/photos', label: 'Photos', icon: cameraIcon },
-	{ id: 'figma', type: 'external', to: 'https://www.figma.com/@kungfury', label: 'Figma', icon: figmaIcon },
-	{ id: 'github', type: 'external', to: 'https://github.com/kungfury100', label: 'GitHub', icon: githubIcon },
+	{ id: 'home', type: 'internal', to: '/', label: 'Home', icon: Home },
+	{ id: 'photos', type: 'internal', to: '/photos', label: 'Photos', icon: Camera },
+	{ id: 'figma', type: 'external', to: 'https://www.figma.com/@kungfury', label: 'Figma', icon: Figma },
+	{ id: 'github', type: 'external', to: 'https://github.com/kungfury100', label: 'GitHub', icon: Github },
 ]
 
 function isRouteActive(pathname: string, to: string) {
@@ -32,40 +28,54 @@ function isRouteActive(pathname: string, to: string) {
 
 function Navbar() {
 	const location = useLocation()
-	const containerRef = useRef<HTMLDivElement | null>(null)
 	const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
 	const [isExpanded, setIsExpanded] = useState(false)
+	const [isMobile, setIsMobile] = useState(() => {
+		if (typeof window === 'undefined') {
+			return false
+		}
+
+		return window.matchMedia('(max-width: 640px)').matches
+	})
+
+	useEffect(() => {
+		const mediaQuery = window.matchMedia('(max-width: 640px)')
+
+		const handleChange = (event: MediaQueryListEvent) => {
+			setIsMobile(event.matches)
+			setIsExpanded(false)
+			setHoveredIndex(null)
+		}
+
+		setIsMobile(mediaQuery.matches)
+		mediaQuery.addEventListener('change', handleChange)
+
+		return () => {
+			mediaQuery.removeEventListener('change', handleChange)
+		}
+	}, [])
 
 	const activeIndex = useMemo(
 		() => navItems.findIndex((item) => isRouteActive(location.pathname, item.to)),
 		[location.pathname],
 	)
 
-	const highlightedIndex = hoveredIndex ?? activeIndex
+	const highlightedIndex = (isMobile ? (hoveredIndex ?? activeIndex) : hoveredIndex) ?? -1
 	const menuStyle = {
 		'--floating-nav-item-count': navItems.length,
 		'--hover-position': highlightedIndex >= 0 ? highlightedIndex : 0,
 	} as CSSProperties
 
-	const handleMouseLeave = () => {
-		setIsExpanded(false)
-		setHoveredIndex(null)
-
-		const activeElement = document.activeElement
-
-		if (activeElement instanceof HTMLElement && containerRef.current?.contains(activeElement)) {
-			activeElement.blur()
-		}
-	}
-
 	return (
 		<nav className='floating-nav' aria-label='Primary'>
 			<div
-				ref={containerRef}
 				className={`floating-nav-container${isExpanded ? ' is-expanded' : ''}`}
 				style={menuStyle}
 				onMouseEnter={() => setIsExpanded(true)}
-				onMouseLeave={handleMouseLeave}
+				onMouseLeave={() => {
+					setHoveredIndex(null)
+					setIsExpanded(false)
+				}}
 			>
 				<button
 					type='button'
@@ -74,7 +84,7 @@ function Navbar() {
 					aria-expanded={isExpanded}
 					onClick={() => setIsExpanded((current) => !current)}
 				>
-					<img src={barsIcon} className='floating-nav-icon' alt='' aria-hidden='true' />
+					<Menu className='floating-nav-icon' aria-hidden='true' strokeWidth={1.75} />
 				</button>
 
 				<div
@@ -82,19 +92,24 @@ function Navbar() {
 					data-hover={highlightedIndex >= 0 ? 'true' : undefined}
 					onMouseLeave={() => setHoveredIndex(null)}
 				>
-					{navItems.map(({ id, type, to, label, icon }, index) => {
+					{navItems.map(({ id, type, to, label, icon: Icon }, index) => {
 						const sharedProps = {
 							className: ['floating-nav-item', hoveredIndex === index ? 'is-hovered' : ''].filter(Boolean).join(' '),
 							'aria-label': label,
-							onMouseEnter: () => setHoveredIndex(index),
-							onFocus: () => {
-								setIsExpanded(true)
+							onMouseEnter: () => {
 								setHoveredIndex(index)
+								setIsExpanded(true)
+							},
+							onFocus: () => {
+								setHoveredIndex(index)
+								setIsExpanded(true)
 							},
 							onBlur: () => setHoveredIndex(null),
 							onClick: () => {
-								setIsExpanded(false)
-								setHoveredIndex(null)
+								if (isMobile) {
+									setHoveredIndex(null)
+									setIsExpanded(false)
+								}
 							},
 						}
 
@@ -107,7 +122,7 @@ function Navbar() {
 									rel='noopener noreferrer'
 									{...sharedProps}
 								>
-									<img src={icon} className='floating-nav-icon' alt='' aria-hidden='true' />
+									<Icon className='floating-nav-icon' aria-hidden='true' strokeWidth={1.75} />
 									<span className='floating-nav-item-label'>{label}</span>
 								</a>
 							)
@@ -120,7 +135,7 @@ function Navbar() {
 								className={({ isActive }) => {
 									const classNames = [...sharedProps.className.split(' ')]
 
-									if (isActive && hoveredIndex === null) {
+									if (isMobile && isActive && hoveredIndex === null) {
 										classNames.push('is-active')
 									}
 
@@ -132,7 +147,7 @@ function Navbar() {
 								onBlur={sharedProps.onBlur}
 								onClick={sharedProps.onClick}
 							>
-								<img src={icon} className='floating-nav-icon' alt='' aria-hidden='true' />
+								<Icon className='floating-nav-icon' aria-hidden='true' strokeWidth={1.75} />
 								<span className='floating-nav-item-label'>{label}</span>
 							</NavLink>
 						)

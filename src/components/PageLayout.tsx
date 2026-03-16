@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { useLocation } from 'react-router-dom'
 import Background from './Background'
 import Logo from './Logo'
 import Navbar from './Navbar'
@@ -9,6 +10,11 @@ type PageLayoutProps = {
 }
 
 function PageLayout({ children }: PageLayoutProps) {
+  const location = useLocation()
+  const contentClassName = location.pathname === '/'
+    ? 'app-content app-content--home'
+    : 'app-content'
+
   return (
     <div>
       <div className='app-frame'>
@@ -19,7 +25,7 @@ function PageLayout({ children }: PageLayoutProps) {
           </Link>
         </div>
         <div className='app-scroll'>
-          <div className='app-content'>
+          <div className={contentClassName}>
             {children}
           </div>
         </div>

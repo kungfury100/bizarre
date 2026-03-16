@@ -95,6 +95,8 @@ function Background() {
       let targetY = app.screen.height * 0.5
       let currentX = targetX
       let currentY = targetY
+      let lastPointerMoveAt = performance.now()
+      let idlePhase = 0
 
       displacementSprite.position.set(currentX - 25, currentY)
 
@@ -102,6 +104,7 @@ function Background() {
         const global = event.global ?? event.data?.global
         if (!global) return
 
+        lastPointerMoveAt = performance.now()
         targetX = global.x
         targetY = global.y
       }
@@ -109,6 +112,21 @@ function Background() {
       app.stage.on('mousemove', onPointerMove).on('touchmove', onPointerMove)
 
       app.ticker.add((time) => {
+        const idleDuration = performance.now() - lastPointerMoveAt
+        const isIdle = idleDuration > 1200
+
+        if (isIdle) {
+          idlePhase += time.deltaTime * 0.01
+
+          const centerX = app.screen.width * 0.5
+          const centerY = app.screen.height * 0.5
+          const orbitX = Math.min(app.screen.width * 0.22, 220)
+          const orbitY = Math.min(app.screen.height * 0.16, 160)
+
+          targetX = centerX + Math.cos(idlePhase) * orbitX
+          targetY = centerY + Math.sin(idlePhase * 0.78) * orbitY
+        }
+
         const easing = 1 - Math.pow(1 - 0.14, time.deltaTime)
         currentX += (targetX - currentX) * easing
         currentY += (targetY - currentY) * easing
