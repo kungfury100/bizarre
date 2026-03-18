@@ -140,7 +140,6 @@
   transition: color 0.15s ease;
 }
 
-.floating-nav-item:hover,
 .floating-nav-item:focus-visible {
   color: var(--background);
   border-bottom: 0;
@@ -150,7 +149,6 @@
   color: var(--background);
 }
 
-.floating-nav-item:hover .floating-nav-icon--asset,
 .floating-nav-item:focus-visible .floating-nav-icon--asset,
 .floating-nav-item.is-hovered .floating-nav-icon--asset {
   filter: brightness(0) saturate(100%) invert(0%) sepia(100%) saturate(0%) hue-rotate(0deg) brightness(0%) contrast(100%);

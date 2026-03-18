@@ -28,6 +28,7 @@ function isRouteActive(pathname: string, to: string) {
 
 function Navbar() {
 	const location = useLocation()
+	const [navElement, setNavElement] = useState<HTMLDivElement | null>(null)
 	const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
 	const [isExpanded, setIsExpanded] = useState(false)
 	const [isMobile, setIsMobile] = useState(() => {
@@ -47,13 +48,42 @@ function Navbar() {
 			setHoveredIndex(null)
 		}
 
-		setIsMobile(mediaQuery.matches)
 		mediaQuery.addEventListener('change', handleChange)
 
 		return () => {
 			mediaQuery.removeEventListener('change', handleChange)
 		}
 	}, [])
+
+	useEffect(() => {
+		if (navElement && document.activeElement instanceof HTMLElement && navElement.contains(document.activeElement)) {
+			document.activeElement.blur()
+		}
+
+		const frame = window.requestAnimationFrame(() => {
+			if (!navElement || isMobile) {
+				setHoveredIndex(null)
+				setIsExpanded(false)
+				return
+			}
+
+			const hoveredItem = navElement.querySelector<HTMLElement>('.floating-nav-item:hover')
+
+			if (hoveredItem) {
+				const nextHoveredIndex = Number(hoveredItem.dataset.navIndex)
+				setHoveredIndex(Number.isNaN(nextHoveredIndex) ? null : nextHoveredIndex)
+				setIsExpanded(true)
+				return
+			}
+
+			setHoveredIndex(null)
+			setIsExpanded(navElement.matches(':hover'))
+		})
+
+		return () => {
+			window.cancelAnimationFrame(frame)
+		}
+	}, [isMobile, location.pathname, navElement])
 
 	const activeIndex = useMemo(
 		() => navItems.findIndex((item) => isRouteActive(location.pathname, item.to)),
@@ -69,6 +99,7 @@ function Navbar() {
 	return (
 		<nav className='floating-nav' aria-label='Primary'>
 			<div
+				ref={setNavElement}
 				className={`floating-nav-container${isExpanded ? ' is-expanded' : ''}`}
 				style={menuStyle}
 				onMouseEnter={() => setIsExpanded(true)}
@@ -120,6 +151,7 @@ function Navbar() {
 									href={to}
 									target='_blank'
 									rel='noopener noreferrer'
+									data-nav-index={index}
 									{...sharedProps}
 								>
 									<Icon className='floating-nav-icon' aria-hidden='true' strokeWidth={1.75} />
@@ -141,6 +173,7 @@ function Navbar() {
 
 									return classNames.filter(Boolean).join(' ')
 								}}
+								data-nav-index={index}
 								aria-label={sharedProps['aria-label']}
 								onMouseEnter={sharedProps.onMouseEnter}
 								onFocus={sharedProps.onFocus}

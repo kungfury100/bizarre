@@ -1,11 +1,13 @@
+import { useRef } from 'react'
 import Rive from '@rive-app/react-webgl2'
 import hologramRiv from '../assets/hologram.riv?url'
 import { Link } from 'react-router-dom'
-import FeaturedCard from '../components/FeaturedCard'
 import CaseStudy from '../components/CaseStudy'
 
 
 function Home() {
+  const caseStudiesRef = useRef<HTMLElement | null>(null)
+
   return (
     <div className='home-page'>
       <div className='home-intro'>
@@ -25,85 +27,147 @@ function Home() {
           </div>
 
           <div className='button-row'>
-            <Link to='/docs/moon' className='button-link'>Check out my work</Link>
+            <button
+              type='button'
+              className='button-link'
+              onClick={() => {
+                const scrollContainer = document.querySelector<HTMLElement>('.app-scroll')
+                const caseStudiesSection = caseStudiesRef.current
+
+                if (!scrollContainer || !caseStudiesSection) {
+                  return
+                }
+
+                const offsetTop =
+                  scrollContainer.scrollTop +
+                  caseStudiesSection.getBoundingClientRect().top -
+                  scrollContainer.getBoundingClientRect().top -
+                  24
+
+                scrollContainer.scrollTo({
+                  top: offsetTop,
+                  behavior: 'smooth',
+                })
+              }}
+            >
+              Check out my work
+            </button>
             <a href='/cv.pdf' target='_blank' rel='noopener noreferrer' className='button-link'>Read my CV</a>
           </div>
         </div>
       </div>
 
-      <section className='home-showcase text-left'>
-        <p>Featured projects</p>
-
-        <div className='home-showcase__grid'>
-          <FeaturedCard
-            title='Moon Design System'
-            description='Design tokens, components, documentation, and adoption across product teams.'
-            to='/docs/moon'
-            image='/moon/cover.jpg'
-            imageAlt='Moon design system preview'
-          />
-
-          <FeaturedCard
-            title='Fudy Order & Pay'
-            description='QR-ordering product and design system work for in-person hospitality experiences.'
-            to='/docs/fudy'
-            image='/fudy/story-reference-1.jpg'
-            imageAlt='Fudy Order and Pay customer interface preview'
-          />
-        </div>
-      </section>
-
-      <section className='case-studies text-left'>
-        <p>Selected work</p>
-
+      <section ref={caseStudiesRef} className='case-studies text-left'>
         <div className='case-studies__list'>
+          <CaseStudy
+            title='Moon Design System'
+            description={[
+              <>Moon Design System is an open-source, multi-framework design system used across Figma, CSS, React, and LiveView.</>,
+              <>I led the Figma-facing design system and built a central component and template library used by multiple products. My work included:</>,
+              <>
+                <ul>
+                  <li>Built an open-source design system with Figma, React, CSS, and LiveView.</li>
+                  <li>Created a React documentation site with live components and token previews.</li>
+                  <li>Drove adoption and workflow improvements across teams.</li>
+                </ul>
+              </>,
+              <><Link to='/docs/moon'>Read case study</Link></>
+            ]}
+            meta={[
+              {
+                label: 'Role',
+                value: 'Lead Product Designer',
+              },
+              {
+                label: 'Year',
+                value: '2024-2025',
+              },
+              {
+                label: 'Website',
+                value: 'moondesignsystem.com',
+                href: 'https://moondesignsystem.com/',
+              },
+            ]}
+            media={[
+              {
+                layout: 'stack',
+                images: [
+                  {
+                    src: '/moon/showcase.png',
+                    alt: 'Component showcase',
+                  },
+                  {
+                    src: '/moon/tokens.jpg',
+                    alt: 'Tokens',
+                  },
+                ],
+              },
+              {
+                layout: 'grid-3',
+                images: [
+                  {
+                    src: '/moon/buttonproperties.jpg',
+                    alt: 'Button properties',
+                  },
+                  {
+                    src: '/moon/tagproperties.jpg',
+                    alt: 'Tag properties',
+                  },
+                  {
+                    src: '/moon/avatarproperties.jpg',
+                    alt: 'Avatar properties',
+                  },
+                ],
+              },
+              {
+                layout: 'stack',
+                images: [
+                  {
+                    src: '/moon/variablesmanagement.jpg',
+                    alt: 'Tag component',
+                  },
+                  {
+                    src: '/moon/variables.jpg',
+                    alt: 'Variables',
+                  },
+                ],
+              },
+            ]}
+          />
+
           <CaseStudy
             title='Tempus'
             description={[
-              'Tempus operates in the Web3 space. I contributed as a contractor to three DeFi projects: Nostra, WenWin, and Raft.',
-              'Nostra is a decentralized exchange for lending, borrowing and trading crypto. WenWin is a blockchain lottery on Ethereum network and Raft is a platform to deposit collateral and earn yield.',
-              'Web3 design was challenging since most UX patterns did not exist yet. I focused on incorporating gamification elements like token rewards while ensuring the interfaces remained intuitive for everyday users.',
+              <>Tempus operates in the Web3 space. I contributed as a contractor to three DeFi projects: Nostra, WenWin, and Raft.</>,
+              <><span>Nostra</span> is a decentralized exchange for lending, borrowing and trading crypto. <span>WenWin</span> is a blockchain lottery on Ethereum network and <span>Raft</span> is a platform to deposit collateral and earn yield.</>,
+              <>Web3 design was challenging since most UX patterns did not exist yet. I focused on incorporating gamification elements like token rewards while ensuring the interfaces remained intuitive for everyday users.</>,
+            ]}
+            meta={[
+              {
+                label: 'Role',
+                value: 'Product Designer',
+              },
+              {
+                label: 'Year',
+                value: '2022-2023',
+              },
+              {
+                label: 'Focus',
+                value: 'DeFi product design',
+              },
             ]}
             images={[
               {
-                src: '/moon/showcase.png',
-                alt: 'Placeholder preview for Tempus case study',
+                src: '/tempus/nostra.jpg',
+                alt: 'Nostra',
               },
               {
-                src: '/fudy/customer-interface.jpg',
-                alt: 'Placeholder interface image for Tempus case study',
+                src: '/tempus/wenwin.jpg',
+                alt: 'WenWin',
               },
               {
-                src: '/fudy/product-view.jpg',
-                alt: 'Placeholder product image for Tempus case study',
-              },
-              {
-                src: '/fudy/product-view.jpg',
-                alt: 'Placeholder product image for Tempus case study',
-              },
-              {
-                src: '/fudy/product-view.jpg',
-                alt: 'Placeholder product image for Tempus case study',
-              },
-              {
-                src: '/moon/showcase.png',
-                alt: 'Placeholder preview for Tempus case study',
-              },
-              {
-                src: '/fudy/customer-interface.jpg',
-                alt: 'Placeholder interface image for Tempus case study',
-              },
-              {
-                src: '/fudy/product-view.jpg',
-                alt: 'Placeholder product image for Tempus case study',
-              },
-              {
-                src: '/fudy/product-view.jpg',
-                alt: 'Placeholder product image for Tempus case study',
-              },
-              {
-                src: '/fudy/product-view.jpg',
-                alt: 'Placeholder product image for Tempus case study',
+                src: '/tempus/raft.jpg',
+                alt: 'Raft',
               },
             ]}
           />
@@ -111,18 +175,36 @@ function Home() {
           <CaseStudy
             title='Freya Foodbar'
             description={[
-              'Designed and developed a website with WordPress and Elementor Page builder.',
-              'Additionally, I developed a dynamic daily menu system using ACF that supports distinct menu structures for different audiences.',
-              'The feature allows staff to manage daily menus from a central options page while custom PHP logic shows the current week and hides past days automatically.',
+              <>Designed and implemented the website in WordPress using Elementor templates and reusable page structures.</>,
+              <>Additionally, I built a dynamic daily menu system with <span>ACF</span> that supports separate menu structures for different audiences.</>,
+              <>The setup lets staff manage menus from a central options page, while custom PHP logic filters the current week and hides past days automatically.</>,
+            ]}
+            meta={[
+              {
+                label: 'Role',
+                value: 'Designer and Developer',
+              },
+              {
+                label: 'Year',
+                value: '2024',
+              },
+              {
+                label: 'Stack',
+                value: 'WordPress, Elementor, ACF',
+              },
             ]}
             images={[
               {
-                src: '/fudy/ordering-flow.jpg',
-                alt: 'Placeholder website preview for Freya Foodbar',
+                src: '/freya/functions.jpg',
+                alt: 'Function to display menu',
               },
               {
-                src: '/moon/showcase.png',
-                alt: 'Placeholder page layout for Freya Foodbar',
+                src: '/freya/acf.jpg',
+                alt: 'ACF plugin fields',
+              },
+              {
+                src: '/freya/menu.jpg',
+                alt: 'Front-end menu display',
               },
             ]}
           />
@@ -130,22 +212,67 @@ function Home() {
           <CaseStudy
             title='Motiveer'
             description={[
-              'Motiveer is an AI-powered employee development platform. I designed a landing page and created visual content with Midjourney.',
-              'I used the Niji 5 model for anime-driven, character-focused compositions that matched the brand direction.',
-              'With the UI design, I wanted Motiveer to feel lightweight and promising to visitors.',
+              <>Motiveer is an AI-powered employee development platform. I designed a landing page and created visual content with Midjourney.</>,
+              <>I used the Niji 5 model for anime-driven, character-focused compositions that matched the brand direction.</>,
+              <>With the UI design, I wanted Motiveer to feel lightweight and promising to visitors.</>,
             ]}
-            images={[
+            meta={[
               {
-                src: '/moon/showcase.png',
-                alt: 'Placeholder landing page preview for Motiveer',
+                label: 'Role',
+                value: 'Designer',
               },
               {
-                src: '/fudy/story-reference-1.jpg',
-                alt: 'Placeholder visual design image for Motiveer',
+                label: 'Year',
+                value: '2023',
               },
               {
-                src: '/fudy/story-reference-2.jpg',
-                alt: 'Placeholder brand illustration image for Motiveer',
+                label: 'Website',
+                value: 'motiveer.eu',
+                href: 'https://motiveer.eu',
+              },
+            ]}
+            media={[
+              {
+                layout: 'grid-3',
+                images: [
+                  {
+                    src: '/motiveer/creative-1.jpg',
+                    alt: 'AI creative',
+                  },
+                  {
+                    src: '/motiveer/creative-2.jpg',
+                    alt: 'AI creative',
+                  },
+                  {
+                    src: '/motiveer/creative-3.jpg',
+                    alt: 'AI creative',
+                  },
+                  {
+                    src: '/motiveer/creative-4.jpg',
+                    alt: 'AI creative',
+                  },
+                  {
+                    src: '/motiveer/creative-5.jpg',
+                    alt: 'AI creative',
+                  },
+                  {
+                    src: '/motiveer/creative-6.jpg',
+                    alt: 'AI creative',
+                  },
+                ],
+              },
+              {
+                layout: 'stack',
+                images: [
+                  {
+                    src: '/motiveer/creative-7.jpg',
+                    alt: 'UI design',
+                  },
+                  {
+                    src: '/motiveer/creative-8.jpg',
+                    alt: 'UI design',
+                  },
+                ],
               },
             ]}
           />
@@ -153,22 +280,68 @@ function Home() {
           <CaseStudy
             title='Fiizy'
             description={[
-              'Fiizy worked on fintech products, primarily as a marketplace for financial products and services.',
-              'I was mainly doing UI design for lending applications in different markets, alongside coding and designing HTML emails.',
-              'Later, I contributed to Fiizy\'s shift into Buy Now, Pay Later by designing a checkout concept and a rebranded website for the product.',
+              <>Fiizy worked on fintech products, primarily as a marketplace for financial products and services.</>,
+              <>I was mainly doing UI design for lending applications in different markets, alongside coding and designing HTML emails.</>,
+              <>Later, I contributed to Fiizy\'s shift into <span>Buy Now, Pay Later</span> by designing a checkout concept and a rebranded website for the product.</>,
             ]}
-            images={[
+            meta={[
               {
-                src: '/fudy/customer-interface.jpg',
-                alt: 'Placeholder fintech interface preview for Fiizy',
+                label: 'Role',
+                value: 'UI Designer',
               },
               {
-                src: '/moon/showcase.png',
-                alt: 'Placeholder product screen for Fiizy',
+                label: 'Year',
+                value: '2019-2022',
               },
               {
-                src: '/fudy/variable-modes-theming.jpg',
-                alt: 'Placeholder checkout concept for Fiizy',
+                label: 'Website',
+                value: 'fiizy.com',
+                href: 'https://fiizy.com',
+              },
+            ]}
+            media={[
+              {
+                layout: 'stack',
+                images: [
+                  {
+                    src: '/fiizy/bnpl.jpg',
+                    alt: 'Buy now pay later',
+                  },
+                  {
+                    src: '/fiizy/fiizy-pay.jpg',
+                    alt: 'Fiizy Pay',
+                  },
+                ],
+              },
+              {
+                layout: 'grid-3',
+                images: [
+                  {
+                    src: '/fiizy/finzmo-1.jpg',
+                    alt: 'Finzmo',
+                  },
+                  {
+                    src: '/fiizy/finzmo-2.jpg',
+                    alt: 'Finzmo',
+                  },
+                  {
+                    src: '/fiizy/finzmo-3.jpg',
+                    alt: 'Finzmo',
+                  },
+                ],
+              },
+              {
+                layout: 'stack',
+                images: [
+                  {
+                    src: '/fiizy/kasowo.jpg',
+                    alt: 'Kasowo',
+                  },
+                  {
+                    src: '/fiizy/medimas.jpg',
+                    alt: 'Medimas',
+                  },
+                ],
               },
             ]}
           />

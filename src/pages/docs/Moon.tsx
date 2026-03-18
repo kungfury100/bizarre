@@ -1,9 +1,9 @@
 const moonImageShowcase = '/moon/showcase.png'
-const moonImageContextualModes = '/moon/contextualmodes.png'
-const moonImageSemanticTokens = '/moon/semantictokens.png'
-const moonImageComponentTokens = '/moon/componenttokens.png'
-const moonImageColorModes = '/moon/colormodes.png'
+const moonImageButtonProperties = '/moon/buttonproperties.jpg'
 const moonImageTagProperties = '/moon/tagproperties.jpg'
+const moonImageAvatarProperties = '/moon/avatarproperties.jpg'
+const moonImageTokens = '/moon/tokens.jpg'
+const moonImageVariables = '/moon/variables.jpg'
 
 
 function Moon() {
@@ -33,7 +33,7 @@ function Moon() {
             />
           </div>
           <p className='subtitle'>
-            Showcase
+            Component showcase
           </p>
         </div>
         <div className='page-stack--tight'>
@@ -66,16 +66,34 @@ function Moon() {
           </ul>
         </div>
         <div className='page-stack--tight'>
-          <div className='container container--narrow'>
-            <img
-              src={moonImageTagProperties}
-              alt='Moon design system screenshot'
-              className='case-study-image case-study-image--narrow'
-              loading='lazy'
-            />
+          <div className='media-grid media-grid--three-up'>
+            <div className='container'>
+              <img
+                src={moonImageButtonProperties}
+                alt='Button component properties'
+                className='case-study-image'
+                loading='lazy'
+              />
+            </div>
+            <div className='container'>
+              <img
+                src={moonImageTagProperties}
+                alt='Tag component properties'
+                className='case-study-image'
+                loading='lazy'
+              />
+            </div>
+            <div className='container'>
+              <img
+                src={moonImageAvatarProperties}
+                alt='Avatar component properties'
+                className='case-study-image'
+                loading='lazy'
+              />
+            </div>
           </div>
           <p className='subtitle'>
-            Tag component properties
+            Component properties
           </p>
         </div>
         <div className='page-stack--tight'>
@@ -107,14 +125,14 @@ function Moon() {
         <div className='page-stack--tight'>
           <div className='container'>
             <img
-              src={moonImageContextualModes}
-              alt='Moon design system screenshot'
+              src={moonImageTokens}
+              alt='Token chain'
               className='case-study-image'
               loading='lazy'
             />
           </div>
           <p className='subtitle'>
-            Contextual modes
+            Token chain
           </p>
         </div>
         <div className='page-stack--tight'>
@@ -147,19 +165,7 @@ function Moon() {
               <li>component level tokens</li>
             </ul>
         </div>
-        <div className='page-stack--tight'>
-          <div className='container'>
-            <img
-              src={moonImageSemanticTokens}
-              alt='Moon design system screenshot'
-              className='case-study-image'
-              loading='lazy'
-            />
-          </div>
-          <p className='subtitle'>
-            Semantic tokens
-          </p>
-        </div>
+
         <div className='page-stack--tight'>
           <p>
             We decided to use <span>component level tokens</span> to make components easier to control, theme and scale without breaking the whole system:
@@ -199,19 +205,6 @@ function Moon() {
             </li>
           </ul>
         </div>
-        <div className='page-stack--tight'>
-          <div className='container'>
-            <img
-              src={moonImageComponentTokens}
-              alt='Moon design system screenshot'
-              className='case-study-image'
-              loading='lazy'
-            />
-          </div>
-          <p className='subtitle'>
-            Component tokens
-          </p>
-        </div>
       
         <div className='page-stack--tight'>
           <h2>How did I know it was the right direction?</h2>
@@ -234,8 +227,8 @@ function Moon() {
         <div className='page-stack--tight'>
           <div className='container'>
             <img
-              src={moonImageColorModes}
-              alt='Moon design system screenshot'
+              src={moonImageVariables}
+              alt='Color modes'
               className='case-study-image'
               loading='lazy'
             />
