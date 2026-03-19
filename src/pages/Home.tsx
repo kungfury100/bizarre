@@ -152,7 +152,7 @@ function Home() {
                 value: '2023-2024',
               },
               {
-                label: 'Focus',
+                label: 'Focuss',
                 value: 'QR ordering flows, Figma components, and white-label theming',
               },
             ]}
