@@ -1,4 +1,4 @@
-const moonImageShowcase = '/moon/showcase.png'
+const moonImageShowcase = '/moon/showcase.jpg'
 const moonImageButtonProperties = '/moon/buttonproperties.jpg'
 const moonImageTagProperties = '/moon/tagproperties.jpg'
 const moonImageAvatarProperties = '/moon/avatarproperties.jpg'
