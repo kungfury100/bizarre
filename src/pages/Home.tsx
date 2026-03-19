@@ -38,11 +38,15 @@ function Home() {
                   return
                 }
 
+                const scrollOffset = window.matchMedia('(max-width: 640px)').matches
+                  ? 88
+                  : 24
+
                 const offsetTop =
                   scrollContainer.scrollTop +
                   caseStudiesSection.getBoundingClientRect().top -
                   scrollContainer.getBoundingClientRect().top -
-                  24
+                  scrollOffset
 
                 scrollContainer.scrollTo({
                   top: offsetTop,
@@ -93,7 +97,7 @@ function Home() {
                 layout: 'stack',
                 images: [
                   {
-                    src: '/moon/showcase.png',
+                    src: '/moon/showcase.jpg',
                     alt: 'Component showcase',
                   },
                   {
