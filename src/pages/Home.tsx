@@ -140,7 +140,7 @@ function Home() {
             description={[
               <>I led the product design of a QR-ordering product for restaurants, bars and other venues.</>,
               <>Fudy was transitioning from a food delivery service, where customer and restaurant staff interactions were entirely online. With <span>Order & Pay</span>, we focused on creating an immediate, personal in-person dining experience.</>,
-              <><Link to='/docs/fudy'>Read case study</Link></>
+              <><Link to='/docs/fudy'>Read case study here</Link></>
             ]}
             meta={[
               {
