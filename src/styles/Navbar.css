@@ -171,6 +171,9 @@
 
 @media (max-width: 640px) {
   .floating-nav {
+    --floating-nav-expanded-width: min(320px, calc(100vw - 1.5rem));
+    --floating-nav-item-width: calc(var(--floating-nav-expanded-width) / var(--floating-nav-item-count, 4));
+    --floating-nav-item-height: 56px;
     bottom: 0.25rem;
     padding: 0.75rem;
   }
@@ -181,18 +184,5 @@
 
   .floating-nav-item.is-active .floating-nav-icon--asset {
     filter: brightness(0) saturate(100%) invert(0%) sepia(100%) saturate(0%) hue-rotate(0deg) brightness(0%) contrast(100%);
-  }
-}
-
-@media (max-width: 320px) {
-  .floating-nav {
-    --floating-nav-expanded-width: calc(100vw - 1.5rem);
-    --floating-nav-item-width: calc(var(--floating-nav-expanded-width) / var(--floating-nav-item-count, 4));
-    --floating-nav-item-height: 56px;
-    left: 0;
-    right: 0;
-    width: 100%;
-    box-sizing: border-box;
-    transform: none;
   }
 }
