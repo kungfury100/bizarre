@@ -1,4 +1,7 @@
 .floating-nav {
+  --floating-nav-item-width: 96px;
+  --floating-nav-item-height: 64px;
+  --floating-nav-expanded-width: calc(var(--floating-nav-item-count, 4) * var(--floating-nav-item-width));
   position: fixed;
   bottom: 1rem;
   left: 50%;
@@ -11,8 +14,8 @@
 
 .floating-nav-container {
   position: relative;
-  width: 96px;
-  height: 64px;
+  width: var(--floating-nav-item-width);
+  height: var(--floating-nav-item-height);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -30,7 +33,7 @@
 .floating-nav-container:hover,
 .floating-nav-container:focus-within,
 .floating-nav-container.is-expanded {
-  width: calc(var(--floating-nav-item-count, 3) * 96px);
+  width: var(--floating-nav-expanded-width);
 }
 
 .floating-nav-toggle {
@@ -91,13 +94,13 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 96px;
-  height: 64px;
+  width: var(--floating-nav-item-width);
+  height: var(--floating-nav-item-height);
   border-radius: 50px;
   background: rgba(255, 255, 255, 1);
   box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
   opacity: 0;
-  transform: translateX(calc(var(--hover-position, 0) * 96px));
+  transform: translateX(calc(var(--hover-position, 0) * var(--floating-nav-item-width)));
   transition:
     transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
     opacity 0.15s ease;
@@ -126,8 +129,8 @@
 }
 
 .floating-nav-item {
-  width: 96px;
-  height: 64px;
+  width: var(--floating-nav-item-width);
+  height: var(--floating-nav-item-height);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -178,5 +181,18 @@
 
   .floating-nav-item.is-active .floating-nav-icon--asset {
     filter: brightness(0) saturate(100%) invert(0%) sepia(100%) saturate(0%) hue-rotate(0deg) brightness(0%) contrast(100%);
+  }
+}
+
+@media (max-width: 320px) {
+  .floating-nav {
+    --floating-nav-expanded-width: calc(100vw - 1.5rem);
+    --floating-nav-item-width: calc(var(--floating-nav-expanded-width) / var(--floating-nav-item-count, 4));
+    --floating-nav-item-height: 56px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    box-sizing: border-box;
+    transform: none;
   }
 }

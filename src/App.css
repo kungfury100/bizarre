@@ -379,12 +379,16 @@ button:hover,
 }
 
 @media (max-width: 640px) {
-  .app-frame {
-    padding: 120px 16px 180px;
+  .app-scroll {
+    padding: 100px 16px 180px;
   }
 
   .home-page {
     gap: 72px;
+  }
+
+  .button-link {
+    width: 80%;
   }
 
   .home-showcase__grid {
@@ -418,7 +422,7 @@ button:hover,
   }
 
   .hero-rive {
-    width: min(300px, 100%);
+    width: min(200px, 100%);
     height: auto;
     aspect-ratio: 1;
   }

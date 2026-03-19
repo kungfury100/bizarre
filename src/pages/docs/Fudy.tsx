@@ -1,3 +1,4 @@
+const fudyImageCover = '/fudy/story-reference-1.jpg'
 const fudyImageCustomerInterface = '/fudy/customer-interface.jpg'
 const fudyImageOrderingFlow = '/fudy/ordering-flow.jpg'
 const fudyImageProductView = '/fudy/product-view.jpg'
@@ -29,6 +30,17 @@ function Fudy() {
           <p>
             This case study focuses on the design system work behind that product: why it was needed, how the architecture took shape, and how product design requirements influenced the system decisions.
           </p>
+        </div>
+
+        <div className='page-stack--tight'>
+          <div className='container'>
+            <img
+              src={fudyImageCover}
+              alt='Migration from styles to variables in Figma'
+              className='case-study-image'
+              loading='lazy'
+            />
+          </div>
         </div>
 
         <div className='page-stack--tight'>

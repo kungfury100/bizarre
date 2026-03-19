@@ -136,6 +136,74 @@ function Home() {
           />
 
           <CaseStudy
+            title='Fudy Order & Pay'
+            description={[
+              <>I led the product design of a QR-ordering product for restaurants, bars and other venues.</>,
+              <>Fudy was transitioning from a food delivery service, where customer and restaurant staff interactions were entirely online. With <span>Order & Pay</span>, we focused on creating an immediate, personal in-person dining experience.</>,
+              <><Link to='/docs/fudy'>Read case study</Link></>
+            ]}
+            meta={[
+              {
+                label: 'Role',
+                value: 'Lead Product Designer',
+              },
+              {
+                label: 'Year',
+                value: '2023-2024',
+              },
+              {
+                label: 'Focus',
+                value: 'QR ordering flows, Figma components, and white-label theming',
+              },
+            ]}
+            media={[
+              {
+                layout: 'stack',
+                images: [
+                  {
+                    src: '/fudy/story-reference-1.jpg',
+                    alt: 'Fudy Order & Pay',
+                  },
+                  {
+                    src: '/fudy/story-reference-2.jpg',
+                    alt: 'Fudy Order & Pay',
+                  },
+                  {
+                    src: '/fudy/story-reference-3.jpg',
+                    alt: 'Fudy Order & Pay',
+                  },
+                ],
+              },
+              {
+                layout: 'grid-3',
+                images: [
+                  {
+                    src: '/fudy/customer-interface.jpg',
+                    alt: 'Customer interface',
+                  },
+                  {
+                    src: '/fudy/ordering-flow.jpg',
+                    alt: 'Ordering flow',
+                  },
+                  {
+                    src: '/fudy/product-view.jpg',
+                    alt: 'Product view',
+                  },
+                ],
+              },
+              {
+                layout: 'stack',
+                images: [
+                  {
+                    src: '/fudy/story-reference-4.jpg',
+                    alt: 'Fudy Order & Pay',
+                  },
+                ],
+              },
+            ]}
+          />
+
+          <CaseStudy
             title='Tempus'
             description={[
               <>Tempus operates in the Web3 space. I contributed as a contractor to three DeFi projects: Nostra, WenWin, and Raft.</>,

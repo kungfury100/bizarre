@@ -1,6 +1,8 @@
 function Photos() {
   return (
-    <div>Photos</div>
+    <div>
+      <p>Films are in development, please come back tomorrow.</p>
+    </div>
   )
 }
 
