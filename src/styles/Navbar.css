@@ -178,6 +178,20 @@
     padding: 0.75rem;
   }
 
+  .floating-nav-container:not(.is-expanded):focus-within {
+    width: var(--floating-nav-item-width);
+  }
+
+  .floating-nav-container:not(.is-expanded):focus-within .floating-nav-toggle {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .floating-nav-container:not(.is-expanded):focus-within .floating-nav-menu-items {
+    opacity: 0;
+    pointer-events: none;
+  }
+
   .floating-nav-item.is-active {
     color: var(--background);
   }
