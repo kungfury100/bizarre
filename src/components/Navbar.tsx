@@ -107,6 +107,16 @@ function Navbar() {
 		setIsExpanded((current) => !current)
 	}
 
+	const collapseNavigation = () => {
+		setHoveredIndex(null)
+		setIsExpanded(false)
+		setIsInteractionReady(false)
+
+		if (navElement && document.activeElement instanceof HTMLElement && navElement.contains(document.activeElement)) {
+			document.activeElement.blur()
+		}
+	}
+
 	useEffect(() => {
 		if (navElement && document.activeElement instanceof HTMLElement && navElement.contains(document.activeElement)) {
 			document.activeElement.blur()
@@ -149,36 +159,30 @@ function Navbar() {
 			return
 		}
 
-		const collapseNavigation = () => {
-			setHoveredIndex(null)
-			setIsExpanded(false)
-			setIsInteractionReady(false)
+		const previousOverflow = scrollElement.style.overflow
+		const previousTouchAction = scrollElement.style.touchAction
+		const previousWebkitOverflowScrolling = scrollElement.style.getPropertyValue('-webkit-overflow-scrolling')
 
-			if (navElement && document.activeElement instanceof HTMLElement && navElement.contains(document.activeElement)) {
-				document.activeElement.blur()
-			}
-		}
-
-		scrollElement.addEventListener('scroll', collapseNavigation, { passive: true })
+		scrollElement.style.setProperty('-webkit-overflow-scrolling', 'auto')
+		scrollElement.style.overflow = 'hidden'
+		scrollElement.style.touchAction = 'none'
 
 		return () => {
-			scrollElement.removeEventListener('scroll', collapseNavigation)
+			scrollElement.style.overflow = previousOverflow
+			scrollElement.style.touchAction = previousTouchAction
+
+			if (previousWebkitOverflowScrolling) {
+				scrollElement.style.setProperty('-webkit-overflow-scrolling', previousWebkitOverflowScrolling)
+				return
+			}
+
+			scrollElement.style.removeProperty('-webkit-overflow-scrolling')
 		}
-	}, [isExpanded, isMobile, navElement])
+	}, [isExpanded, isMobile])
 
 	useEffect(() => {
 		if (!isMobile || !isExpanded || !navElement) {
 			return
-		}
-
-		const collapseNavigation = () => {
-			setHoveredIndex(null)
-			setIsExpanded(false)
-			setIsInteractionReady(false)
-
-			if (document.activeElement instanceof HTMLElement && navElement.contains(document.activeElement)) {
-				document.activeElement.blur()
-			}
 		}
 
 		const handlePointerDown = (event: PointerEvent) => {
@@ -239,6 +243,12 @@ function Navbar() {
 						event.preventDefault()
 						event.stopPropagation()
 						ignoreToggleClickRef.current = true
+
+						if (isExpanded) {
+							collapseNavigation()
+							return
+						}
+
 						interruptScrollMomentum()
 						toggleNavigation()
 					}}
