@@ -143,6 +143,36 @@ function Navbar() {
 		}
 	}, [isExpanded, isMobile, navElement])
 
+	useEffect(() => {
+		if (!isMobile || !isExpanded || !navElement) {
+			return
+		}
+
+		const collapseNavigation = () => {
+			setHoveredIndex(null)
+			setIsExpanded(false)
+			setIsInteractionReady(false)
+
+			if (document.activeElement instanceof HTMLElement && navElement.contains(document.activeElement)) {
+				document.activeElement.blur()
+			}
+		}
+
+		const handlePointerDown = (event: PointerEvent) => {
+			if (event.target instanceof Node && navElement.contains(event.target)) {
+				return
+			}
+
+			collapseNavigation()
+		}
+
+		document.addEventListener('pointerdown', handlePointerDown, true)
+
+		return () => {
+			document.removeEventListener('pointerdown', handlePointerDown, true)
+		}
+	}, [isExpanded, isMobile, navElement])
+
 	const highlightedIndex = isMobile ? -1 : (hoveredIndex ?? -1)
 	const menuStyle = {
 		'--floating-nav-item-count': navItems.length,
