@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { Camera, Figma, Github, Home, Menu, type LucideIcon } from 'lucide-react'
 import { NavLink, useLocation } from 'react-router-dom'
 import '../styles/Navbar.css'
@@ -17,14 +17,6 @@ const navItems: NavItem[] = [
 	{ id: 'figma', type: 'external', to: 'https://www.figma.com/@kungfury', label: 'Figma', icon: Figma },
 	{ id: 'github', type: 'external', to: 'https://github.com/kungfury100', label: 'GitHub', icon: Github },
 ]
-
-function isRouteActive(pathname: string, to: string) {
-	if (to === '/') {
-		return pathname === '/'
-	}
-
-	return pathname === to || pathname.startsWith(`${to}/`)
-}
 
 function Navbar() {
 	const location = useLocation()
@@ -123,12 +115,7 @@ function Navbar() {
 		}
 	}, [isMobile, location.pathname, navElement])
 
-	const activeIndex = useMemo(
-		() => navItems.findIndex((item) => isRouteActive(location.pathname, item.to)),
-		[location.pathname],
-	)
-
-	const highlightedIndex = (isMobile ? (hoveredIndex ?? activeIndex) : hoveredIndex) ?? -1
+	const highlightedIndex = hoveredIndex ?? -1
 	const menuStyle = {
 		'--floating-nav-item-count': navItems.length,
 		'--hover-position': highlightedIndex >= 0 ? highlightedIndex : 0,
@@ -178,6 +165,14 @@ function Navbar() {
 							setIsExpanded(true)
 						}
 
+						const handleFocus = () => {
+							if (isMobile) {
+								return
+							}
+
+							handleEnter()
+						}
+
 						const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
 							if (isMobile && !isInteractionReady) {
 								event.preventDefault()
@@ -196,7 +191,7 @@ function Navbar() {
 							className: ['floating-nav-item', hoveredIndex === index ? 'is-hovered' : ''].filter(Boolean).join(' '),
 							'aria-label': label,
 							onMouseEnter: handleEnter,
-							onFocus: handleEnter,
+							onFocus: handleFocus,
 							onBlur: () => setHoveredIndex(null),
 							onClick: handleClick,
 						}
@@ -221,15 +216,7 @@ function Navbar() {
 							<NavLink
 								key={id}
 								to={to}
-								className={({ isActive }) => {
-									const classNames = [...sharedProps.className.split(' ')]
-
-									if (isMobile && isActive && hoveredIndex === null) {
-										classNames.push('is-active')
-									}
-
-									return classNames.filter(Boolean).join(' ')
-								}}
+								className={sharedProps.className}
 								data-nav-index={index}
 								aria-label={sharedProps['aria-label']}
 								onMouseEnter={sharedProps.onMouseEnter}

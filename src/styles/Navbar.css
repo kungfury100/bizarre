@@ -50,6 +50,7 @@
   border: 0;
   border-radius: 50px;
   z-index: 2;
+  -webkit-tap-highlight-color: transparent;
   transition: opacity 0.1s ease;
 }
 
@@ -145,6 +146,7 @@
   border-radius: 50px;
   position: relative;
   z-index: 1;
+  -webkit-tap-highlight-color: transparent;
   transition: color 0.15s ease;
 }
 
@@ -197,11 +199,15 @@
     pointer-events: none;
   }
 
-  .floating-nav-item.is-active {
-    color: var(--background);
+  .floating-nav-item:focus,
+  .floating-nav-item:focus-visible {
+    color: var(--text);
+    outline: none;
+    box-shadow: none;
   }
 
-  .floating-nav-item.is-active .floating-nav-icon--asset {
-    filter: brightness(0) saturate(100%) invert(0%) sepia(100%) saturate(0%) hue-rotate(0deg) brightness(0%) contrast(100%);
+  .floating-nav-item:focus .floating-nav-icon--asset,
+  .floating-nav-item:focus-visible .floating-nav-icon--asset {
+    filter: brightness(0) saturate(100%) invert(92%) sepia(18%) saturate(462%) hue-rotate(80deg) brightness(106%) contrast(99%);
   }
 }
