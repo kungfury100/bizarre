@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
-import { Camera, Figma, Github, Home, Menu, type LucideIcon } from 'lucide-react'
+import { Camera, Figma, Github, Home, Menu, Music, type LucideIcon } from 'lucide-react'
 import { NavLink, useLocation } from 'react-router-dom'
 import '../styles/Navbar.css'
 
