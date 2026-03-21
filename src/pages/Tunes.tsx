@@ -1,6 +1,5 @@
 
-import React, { useEffect, useRef, useState } from 'react';
-import { parseBlob } from 'music-metadata-browser';
+import { useEffect, useRef, useState } from 'react';
 
 const playlist = [
   {
@@ -100,7 +99,7 @@ const playlist = [
 const defaultArt =
   'data:image/svg+xml;utf8,<svg width="160" height="160" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" rx="24" fill="%23222"/><text x="50%" y="54%" text-anchor="middle" font-size="32" fill="%23b1f1cb" font-family="sans-serif" dy=".3em">🎵</text></svg>';
 
-function getTotalDuration(playlist) {
+function getTotalDuration(playlist: { time?: string }[]) {
   // expects time in mm:ss or m:ss
   let totalSeconds = 0;
   for (const track of playlist) {
