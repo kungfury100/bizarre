@@ -25,6 +25,7 @@ function Navbar() {
 	const [isExpanded, setIsExpanded] = useState(false)
 	const [isInteractionReady, setIsInteractionReady] = useState(false)
 	const openInteractionTimeoutRef = useRef<number | null>(null)
+	const autoCloseTimeoutRef = useRef<number | null>(null)
 	const ignoreToggleClickRef = useRef(false)
 	const [isMobile, setIsMobile] = useState(() => {
 		if (typeof window === 'undefined') {
@@ -51,9 +52,22 @@ function Navbar() {
 				window.clearTimeout(openInteractionTimeoutRef.current)
 			}
 
+			if (autoCloseTimeoutRef.current !== null) {
+				window.clearTimeout(autoCloseTimeoutRef.current)
+			}
+
 			mediaQuery.removeEventListener('change', handleChange)
 		}
 	}, [])
+
+	const clearAutoCloseTimeout = () => {
+		if (autoCloseTimeoutRef.current === null) {
+			return
+		}
+
+		window.clearTimeout(autoCloseTimeoutRef.current)
+		autoCloseTimeoutRef.current = null
+	}
 
 	useEffect(() => {
 		if (openInteractionTimeoutRef.current !== null) {
@@ -91,6 +105,7 @@ function Navbar() {
 	}
 
 	const collapseNavigation = () => {
+		clearAutoCloseTimeout()
 		setHoveredIndex(null)
 		setIsExpanded(false)
 		setIsInteractionReady(false)
@@ -98,6 +113,18 @@ function Navbar() {
 		if (navElement && document.activeElement instanceof HTMLElement && navElement.contains(document.activeElement)) {
 			document.activeElement.blur()
 		}
+	}
+
+	const scheduleAutoClose = () => {
+		if (!isMobile || !isExpanded) {
+			return
+		}
+
+		clearAutoCloseTimeout()
+		autoCloseTimeoutRef.current = window.setTimeout(() => {
+			collapseNavigation()
+			autoCloseTimeoutRef.current = null
+		}, 2000)
 	}
 
 	useEffect(() => {
@@ -133,8 +160,11 @@ function Navbar() {
 
 	useEffect(() => {
 		if (!isMobile || !isExpanded || !navElement) {
+			clearAutoCloseTimeout()
 			return
 		}
+
+		scheduleAutoClose()
 
 		const handlePointerDown = (event: PointerEvent) => {
 			if (event.target instanceof Node && navElement.contains(event.target)) {
@@ -147,6 +177,7 @@ function Navbar() {
 		document.addEventListener('pointerdown', handlePointerDown, true)
 
 		return () => {
+			clearAutoCloseTimeout()
 			document.removeEventListener('pointerdown', handlePointerDown, true)
 		}
 	}, [isExpanded, isMobile, navElement])
@@ -163,6 +194,13 @@ function Navbar() {
 				ref={setNavElement}
 				className={`floating-nav-container${isExpanded ? ' is-expanded' : ''}${isInteractionReady ? ' is-interaction-ready' : ''}`}
 				style={menuStyle}
+				onPointerDownCapture={() => {
+					if (!isMobile || !isExpanded) {
+						return
+					}
+
+					scheduleAutoClose()
+				}}
 				onMouseEnter={() => {
 					if (isMobile) {
 						return
