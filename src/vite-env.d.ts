@@ -1,5 +1,14 @@
 /// <reference types="vite/client" />
 
+interface ImportMetaEnv {
+  readonly VITE_LASTFM_API_KEY?: string
+  readonly VITE_LASTFM_USERNAME?: string
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv
+}
+
 declare module '*.riv' {
   const src: string
   export default src
