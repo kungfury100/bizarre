@@ -124,8 +124,13 @@
 .floating-nav-container:focus-within .floating-nav-menu-items,
 .floating-nav-container.is-expanded .floating-nav-menu-items {
   opacity: 1;
-  pointer-events: auto;
   transition-delay: 0.1s;
+}
+
+.floating-nav-container:hover .floating-nav-menu-items,
+.floating-nav-container:focus-within .floating-nav-menu-items,
+.floating-nav-container.is-expanded.is-interaction-ready .floating-nav-menu-items {
+  pointer-events: auto;
 }
 
 .floating-nav-item {

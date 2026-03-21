@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type CSSProperties } from 'react'
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { Camera, Figma, Github, Home, Menu, type LucideIcon } from 'lucide-react'
 import { NavLink, useLocation } from 'react-router-dom'
 import '../styles/Navbar.css'
@@ -31,6 +31,8 @@ function Navbar() {
 	const [navElement, setNavElement] = useState<HTMLDivElement | null>(null)
 	const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
 	const [isExpanded, setIsExpanded] = useState(false)
+	const [isInteractionReady, setIsInteractionReady] = useState(false)
+	const openInteractionTimeoutRef = useRef<number | null>(null)
 	const [isMobile, setIsMobile] = useState(() => {
 		if (typeof window === 'undefined') {
 			return false
@@ -45,15 +47,50 @@ function Navbar() {
 		const handleChange = (event: MediaQueryListEvent) => {
 			setIsMobile(event.matches)
 			setIsExpanded(false)
+			setIsInteractionReady(false)
 			setHoveredIndex(null)
 		}
 
 		mediaQuery.addEventListener('change', handleChange)
 
 		return () => {
+			if (openInteractionTimeoutRef.current !== null) {
+				window.clearTimeout(openInteractionTimeoutRef.current)
+			}
+
 			mediaQuery.removeEventListener('change', handleChange)
 		}
 	}, [])
+
+	useEffect(() => {
+		if (openInteractionTimeoutRef.current !== null) {
+			window.clearTimeout(openInteractionTimeoutRef.current)
+			openInteractionTimeoutRef.current = null
+		}
+
+		if (!isMobile) {
+			setIsInteractionReady(true)
+			return
+		}
+
+		if (!isExpanded) {
+			setIsInteractionReady(false)
+			return
+		}
+
+		setIsInteractionReady(false)
+		openInteractionTimeoutRef.current = window.setTimeout(() => {
+			setIsInteractionReady(true)
+			openInteractionTimeoutRef.current = null
+		}, 220)
+
+		return () => {
+			if (openInteractionTimeoutRef.current !== null) {
+				window.clearTimeout(openInteractionTimeoutRef.current)
+				openInteractionTimeoutRef.current = null
+			}
+		}
+	}, [isExpanded, isMobile])
 
 	useEffect(() => {
 		if (navElement && document.activeElement instanceof HTMLElement && navElement.contains(document.activeElement)) {
@@ -64,6 +101,7 @@ function Navbar() {
 			if (!navElement || isMobile) {
 				setHoveredIndex(null)
 				setIsExpanded(false)
+				setIsInteractionReady(false)
 				return
 			}
 
@@ -100,12 +138,16 @@ function Navbar() {
 		<nav className='floating-nav' aria-label='Primary'>
 			<div
 				ref={setNavElement}
-				className={`floating-nav-container${isExpanded ? ' is-expanded' : ''}`}
+				className={`floating-nav-container${isExpanded ? ' is-expanded' : ''}${isInteractionReady ? ' is-interaction-ready' : ''}`}
 				style={menuStyle}
-				onMouseEnter={() => setIsExpanded(true)}
+				onMouseEnter={() => {
+					setIsExpanded(true)
+					setIsInteractionReady(true)
+				}}
 				onMouseLeave={() => {
 					setHoveredIndex(null)
 					setIsExpanded(false)
+					setIsInteractionReady(false)
 				}}
 			>
 				<button
@@ -113,7 +155,10 @@ function Navbar() {
 					className='floating-nav-toggle'
 					aria-label='Toggle navigation'
 					aria-expanded={isExpanded}
-					onClick={() => setIsExpanded((current) => !current)}
+					onClick={() => {
+						setHoveredIndex(null)
+						setIsExpanded((current) => !current)
+					}}
 				>
 					<Menu className='floating-nav-icon' aria-hidden='true' strokeWidth={1.75} />
 				</button>
@@ -124,24 +169,36 @@ function Navbar() {
 					onMouseLeave={() => setHoveredIndex(null)}
 				>
 					{navItems.map(({ id, type, to, label, icon: Icon }, index) => {
+						const handleEnter = () => {
+							if (isMobile && !isInteractionReady) {
+								return
+							}
+
+							setHoveredIndex(index)
+							setIsExpanded(true)
+						}
+
+						const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+							if (isMobile && !isInteractionReady) {
+								event.preventDefault()
+								event.stopPropagation()
+								return
+							}
+
+							if (isMobile) {
+								setHoveredIndex(null)
+								setIsExpanded(false)
+								setIsInteractionReady(false)
+							}
+						}
+
 						const sharedProps = {
 							className: ['floating-nav-item', hoveredIndex === index ? 'is-hovered' : ''].filter(Boolean).join(' '),
 							'aria-label': label,
-							onMouseEnter: () => {
-								setHoveredIndex(index)
-								setIsExpanded(true)
-							},
-							onFocus: () => {
-								setHoveredIndex(index)
-								setIsExpanded(true)
-							},
+							onMouseEnter: handleEnter,
+							onFocus: handleEnter,
 							onBlur: () => setHoveredIndex(null),
-							onClick: () => {
-								if (isMobile) {
-									setHoveredIndex(null)
-									setIsExpanded(false)
-								}
-							},
+							onClick: handleClick,
 						}
 
 						if (type === 'external') {
