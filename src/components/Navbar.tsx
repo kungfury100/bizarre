@@ -13,7 +13,7 @@ type NavItem = {
 
 const navItems: NavItem[] = [
 	{ id: 'home', type: 'internal', to: '/', label: 'Home', icon: Home },
-	{ id: 'photos', type: 'internal', to: '/photos', label: 'Photos', icon: Camera },
+	{ id: 'photos', type: 'internal', to: '/shots', label: 'Photos', icon: Camera },
 	{ id: 'figma', type: 'external', to: 'https://www.figma.com/@kungfury', label: 'Figma', icon: Figma },
 	{ id: 'github', type: 'external', to: 'https://github.com/kungfury100', label: 'GitHub', icon: Github },
 ]

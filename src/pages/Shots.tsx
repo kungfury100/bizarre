@@ -12,7 +12,7 @@ const blackAndWhitePhotos = Array.from({ length: 19 }, (_, index) => ({
   alt: `Black and white photo ${index + 1}`,
 }))
 
-function Photos() {
+function Shots() {
   const [activeCategory, setActiveCategory] = useState<PhotoCategory>('color')
 
   const visiblePhotos = useMemo(
@@ -77,4 +77,4 @@ function Photos() {
   )
 }
 
-export default Photos
+export default Shots

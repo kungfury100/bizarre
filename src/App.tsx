@@ -2,7 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import './App.css'
 import PageLayout from './components/PageLayout'
 import Home from './pages/Home'
-import Photos from './pages/Photos'
+import Shots from './pages/Shots'
 import Moon from './pages/docs/Moon'
 import Fudy from './pages/docs/Fudy'
 
@@ -13,7 +13,7 @@ function App() {
     <PageLayout>
       <Routes>
         <Route path='/' element={<Home />} />
-        <Route path='/photos' element={<Photos />} />
+        <Route path='/shots' element={<Shots />} />
         <Route path='/docs/moon' element={<Moon />} />
         <Route path='/docs/fudy' element={<Fudy />} />
         <Route path='*' element={<Navigate to='/' replace />} />
