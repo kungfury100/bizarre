@@ -25,6 +25,7 @@ function Navbar() {
 	const [isExpanded, setIsExpanded] = useState(false)
 	const [isInteractionReady, setIsInteractionReady] = useState(false)
 	const openInteractionTimeoutRef = useRef<number | null>(null)
+	const ignoreToggleClickRef = useRef(false)
 	const [isMobile, setIsMobile] = useState(() => {
 		if (typeof window === 'undefined') {
 			return false
@@ -83,6 +84,28 @@ function Navbar() {
 			}
 		}
 	}, [isExpanded, isMobile])
+
+	const interruptScrollMomentum = () => {
+		const scrollElement = document.querySelector<HTMLElement>('.app-scroll')
+
+		if (!scrollElement) {
+			return
+		}
+
+		scrollElement.style.setProperty('-webkit-overflow-scrolling', 'auto')
+		scrollElement.style.overflow = 'hidden'
+		void scrollElement.offsetHeight
+		scrollElement.style.removeProperty('overflow')
+
+		window.requestAnimationFrame(() => {
+			scrollElement.style.removeProperty('-webkit-overflow-scrolling')
+		})
+	}
+
+	const toggleNavigation = () => {
+		setHoveredIndex(null)
+		setIsExpanded((current) => !current)
+	}
 
 	useEffect(() => {
 		if (navElement && document.activeElement instanceof HTMLElement && navElement.contains(document.activeElement)) {
@@ -208,9 +231,24 @@ function Navbar() {
 					className='floating-nav-toggle'
 					aria-label='Toggle navigation'
 					aria-expanded={isExpanded}
+					onPointerDown={(event) => {
+						if (!isMobile) {
+							return
+						}
+
+						event.preventDefault()
+						event.stopPropagation()
+						ignoreToggleClickRef.current = true
+						interruptScrollMomentum()
+						toggleNavigation()
+					}}
 					onClick={() => {
-						setHoveredIndex(null)
-						setIsExpanded((current) => !current)
+						if (ignoreToggleClickRef.current) {
+							ignoreToggleClickRef.current = false
+							return
+						}
+
+						toggleNavigation()
 					}}
 				>
 					<Menu className='floating-nav-icon' aria-hidden='true' strokeWidth={1.75} />
