@@ -115,7 +115,35 @@ function Navbar() {
 		}
 	}, [isMobile, location.pathname, navElement])
 
-	const highlightedIndex = hoveredIndex ?? -1
+	useEffect(() => {
+		if (!isMobile || !isExpanded) {
+			return
+		}
+
+		const scrollElement = document.querySelector<HTMLElement>('.app-scroll')
+
+		if (!scrollElement) {
+			return
+		}
+
+		const collapseNavigation = () => {
+			setHoveredIndex(null)
+			setIsExpanded(false)
+			setIsInteractionReady(false)
+
+			if (navElement && document.activeElement instanceof HTMLElement && navElement.contains(document.activeElement)) {
+				document.activeElement.blur()
+			}
+		}
+
+		scrollElement.addEventListener('scroll', collapseNavigation, { passive: true })
+
+		return () => {
+			scrollElement.removeEventListener('scroll', collapseNavigation)
+		}
+	}, [isExpanded, isMobile, navElement])
+
+	const highlightedIndex = isMobile ? -1 : (hoveredIndex ?? -1)
 	const menuStyle = {
 		'--floating-nav-item-count': navItems.length,
 		'--hover-position': highlightedIndex >= 0 ? highlightedIndex : 0,
@@ -128,10 +156,18 @@ function Navbar() {
 				className={`floating-nav-container${isExpanded ? ' is-expanded' : ''}${isInteractionReady ? ' is-interaction-ready' : ''}`}
 				style={menuStyle}
 				onMouseEnter={() => {
+					if (isMobile) {
+						return
+					}
+
 					setIsExpanded(true)
 					setIsInteractionReady(true)
 				}}
 				onMouseLeave={() => {
+					if (isMobile) {
+						return
+					}
+
 					setHoveredIndex(null)
 					setIsExpanded(false)
 					setIsInteractionReady(false)
@@ -153,11 +189,17 @@ function Navbar() {
 				<div
 					className='floating-nav-menu-items'
 					data-hover={highlightedIndex >= 0 ? 'true' : undefined}
-					onMouseLeave={() => setHoveredIndex(null)}
+					onMouseLeave={() => {
+						if (isMobile) {
+							return
+						}
+
+						setHoveredIndex(null)
+					}}
 				>
 					{navItems.map(({ id, type, to, label, icon: Icon }, index) => {
 						const handleEnter = () => {
-							if (isMobile && !isInteractionReady) {
+							if (isMobile) {
 								return
 							}
 
@@ -188,7 +230,7 @@ function Navbar() {
 						}
 
 						const sharedProps = {
-							className: ['floating-nav-item', hoveredIndex === index ? 'is-hovered' : ''].filter(Boolean).join(' '),
+							className: ['floating-nav-item', !isMobile && hoveredIndex === index ? 'is-hovered' : ''].filter(Boolean).join(' '),
 							'aria-label': label,
 							onMouseEnter: handleEnter,
 							onFocus: handleFocus,
