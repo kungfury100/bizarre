@@ -85,23 +85,6 @@ function Navbar() {
 		}
 	}, [isExpanded, isMobile])
 
-	const interruptScrollMomentum = () => {
-		const scrollElement = document.querySelector<HTMLElement>('.app-scroll')
-
-		if (!scrollElement) {
-			return
-		}
-
-		scrollElement.style.setProperty('-webkit-overflow-scrolling', 'auto')
-		scrollElement.style.overflow = 'hidden'
-		void scrollElement.offsetHeight
-		scrollElement.style.removeProperty('overflow')
-
-		window.requestAnimationFrame(() => {
-			scrollElement.style.removeProperty('-webkit-overflow-scrolling')
-		})
-	}
-
 	const toggleNavigation = () => {
 		setHoveredIndex(null)
 		setIsExpanded((current) => !current)
@@ -147,38 +130,6 @@ function Navbar() {
 			window.cancelAnimationFrame(frame)
 		}
 	}, [isMobile, location.pathname, navElement])
-
-	useEffect(() => {
-		if (!isMobile || !isExpanded) {
-			return
-		}
-
-		const scrollElement = document.querySelector<HTMLElement>('.app-scroll')
-
-		if (!scrollElement) {
-			return
-		}
-
-		const previousOverflow = scrollElement.style.overflow
-		const previousTouchAction = scrollElement.style.touchAction
-		const previousWebkitOverflowScrolling = scrollElement.style.getPropertyValue('-webkit-overflow-scrolling')
-
-		scrollElement.style.setProperty('-webkit-overflow-scrolling', 'auto')
-		scrollElement.style.overflow = 'hidden'
-		scrollElement.style.touchAction = 'none'
-
-		return () => {
-			scrollElement.style.overflow = previousOverflow
-			scrollElement.style.touchAction = previousTouchAction
-
-			if (previousWebkitOverflowScrolling) {
-				scrollElement.style.setProperty('-webkit-overflow-scrolling', previousWebkitOverflowScrolling)
-				return
-			}
-
-			scrollElement.style.removeProperty('-webkit-overflow-scrolling')
-		}
-	}, [isExpanded, isMobile])
 
 	useEffect(() => {
 		if (!isMobile || !isExpanded || !navElement) {
@@ -249,7 +200,6 @@ function Navbar() {
 							return
 						}
 
-						interruptScrollMomentum()
 						toggleNavigation()
 					}}
 					onClick={() => {
