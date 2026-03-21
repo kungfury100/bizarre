@@ -3,13 +3,10 @@ import Rive from '@rive-app/react-webgl2'
 import hologramRiv from '../assets/hologram.riv?url'
 import { Link } from 'react-router-dom'
 import CaseStudy from '../components/CaseStudy'
-import LastfmWidget from '../components/LastfmWidget'
 
 
 function Home() {
   const caseStudiesRef = useRef<HTMLElement | null>(null)
-  const lastfmUsername = import.meta.env.VITE_LASTFM_USERNAME
-  const lastfmApiKey = import.meta.env.VITE_LASTFM_API_KEY
 
   return (
     <div className='home-page'>
@@ -61,10 +58,6 @@ function Home() {
             </button>
             <a href='/cv.pdf' target='_blank' rel='noopener noreferrer' className='button-link'>Read my CV</a>
           </div>
-
-          {/* {lastfmUsername && lastfmApiKey ? (
-            <LastfmWidget username={lastfmUsername} apiKey={lastfmApiKey} />
-          ) : null} */}
         </div>
       </div>
 
