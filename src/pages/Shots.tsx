@@ -33,7 +33,7 @@ function Shots() {
       <section className='photos-hero'>
         <div className='photos-hero__meta'>
           <h1>Shots</h1>
-          <p>I take my photos on a film.</p>
+          <p>I take my shots on a film.</p>
         </div>
 
         <div className='photos-filter' role='tablist' aria-label='Photo categories'>

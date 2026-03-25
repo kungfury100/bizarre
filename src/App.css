@@ -520,6 +520,27 @@ button:hover,
   border-radius: 19px;
 }
 
+::-webkit-scrollbar {
+  width: 10px;
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, var(--logo) 0%, var(--background) 100%);
+  border-radius: 8px;
+  border: 2px solid var(--background);
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+  border-radius: 8px;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--logo) var(--background);
+}
+
 @media (max-width: 640px) {
   .app-scroll {
     padding: 100px 16px 180px;
